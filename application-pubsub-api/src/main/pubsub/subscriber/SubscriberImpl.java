@@ -1,6 +1,6 @@
-package pubsub.subscriber;
+package main.pubsub.subscriber;
 
-import pubsub.service.PubSubService;
+import main.pubsub.service.PubSubService;
 
 public class SubscriberImpl extends Subscriber{
     //Add subscriber with PubSubService for a topic

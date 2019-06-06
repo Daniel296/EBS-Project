@@ -1,9 +1,9 @@
-package pubsub.subscriber;
+package main.pubsub.subscriber;
 
 import java.util.ArrayList;
 import java.util.List;
-import pubsub.Message;
-import pubsub.service.PubSubService;
+import main.pubsub.Message;
+import main.pubsub.service.PubSubService;
 
 public abstract class Subscriber {
     //store all messages received by the subscriber

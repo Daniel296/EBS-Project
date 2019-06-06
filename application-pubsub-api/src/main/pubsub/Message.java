@@ -1,4 +1,4 @@
-package pubsub;
+package main.pubsub;
 
 public class Message {
     private String topic;
