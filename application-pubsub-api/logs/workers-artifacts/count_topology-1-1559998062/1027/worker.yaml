@@ -1,0 +1,4 @@
+worker-id: cf8d3d66-9bef-4c59-b0b1-934374604e26
+logs.users: []
+logs.groups: []
+topology.submitter.user: alex
