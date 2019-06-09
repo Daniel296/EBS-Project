@@ -40,6 +40,8 @@ public class PublicationsCountBolt extends BaseRichBolt
 		Map<Class,Object> entry = (Map<Class,Object>) input.getValueByField("subscription"); 
 		Subscription sub = (Subscription) entry.get(Subscription.class);
 		
+		System.out.println("Counter: " + sub);
+		
 		Integer subCount = this.count.get(sub);
 		
 		if (subCount == null) {

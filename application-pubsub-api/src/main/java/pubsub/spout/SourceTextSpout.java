@@ -26,15 +26,12 @@ public class SourceTextSpout extends BaseRichSpout
 
     public void open(Map conf, TopologyContext context, SpoutOutputCollector collector)
     {
-        // TODO Auto-generated method stub
         this.collector = collector;
         this.sourceFeed = readSourceFile();
     }
 
     public void nextTuple()
     {
-        // TODO Auto-generated method stub
-
         this.collector.emit(new Values(sourceFeed.toArray()[i]));
         i++;
         if (i >= sourceFeed.toArray().length) {
@@ -51,10 +48,10 @@ public class SourceTextSpout extends BaseRichSpout
 
     public void declareOutputFields(OutputFieldsDeclarer declarer)
     {
-        declarer.declare(new Fields("words"));
+        declarer.declare(new Fields("subscriptions"));
     }
 
-    /*
+    /**
 	 * Sample of generated feed.
 	 * [{"birthdate":"1981-02-18","eyeColor":"Blue","heartRate":"60","name":"Allan", "height":"1.66"}]
 	 */

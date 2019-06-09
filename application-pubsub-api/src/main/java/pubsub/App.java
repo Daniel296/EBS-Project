@@ -36,11 +36,11 @@ public class App
 
     private static final String TERMINAL_BOLT_ID = "terminal_bolt";
 
-    private static final boolean GENERATE_PUBLICATIONS = false;
+    private static final boolean GENERATE_PUBLICATIONS = true;
 
     public static final String FEED_NAME = "publications.json";
 
-    public static final int MAX_MESSAGES = 100;
+    public static final int MAX_MESSAGES = 5000;
 
     public static void main(String[] args)
     {
@@ -51,7 +51,6 @@ public class App
         Subscription firstSubscription = new Subscription(Generator.getRandomName(), Generator.getRandomNameOperator(), Generator.getRandomHeartRate(), Generator.getRandomOperator(), Generator.getRandomDate(), Generator.getRandomOperator());
         Subscription secondSubscription = new Subscription(Generator.getRandomName(), Generator.getRandomNameOperator(), Generator.getRandomHeartRate(), Generator.getRandomOperator(), Generator.getRandomDate(), Generator.getRandomOperator());
         Subscription thirdSubscription = new Subscription(Generator.getRandomName(), Generator.getRandomNameOperator(), Generator.getRandomHeartRate(), Generator.getRandomOperator(), Generator.getRandomDate(), Generator.getRandomOperator());
-    
 
         TopologyBuilder builder = new TopologyBuilder();
         SourceTextSpout spout = new SourceTextSpout();
@@ -66,7 +65,10 @@ public class App
         builder.setBolt(FILTER_BOLT_1, firstContentFilter).shuffleGrouping(SPOUT_ID);
         builder.setBolt(FILTER_BOLT_2, secondContentFilter).shuffleGrouping(SPOUT_ID);
         builder.setBolt(FILTER_BOLT_3, thirdContentFilter).shuffleGrouping(SPOUT_ID);
-        builder.setBolt(COUNT_BOLT_ID, countbolt).fieldsGrouping(FILTER_BOLT_3, new Fields("subscription"));
+		builder.setBolt(COUNT_BOLT_ID, countbolt).fieldsGrouping(FILTER_BOLT_3, new Fields("subscription"))
+				.fieldsGrouping(FILTER_BOLT_2, new Fields("subscription"))
+				.fieldsGrouping(FILTER_BOLT_3, new Fields("subscription"));
+        
         builder.setBolt(TERMINAL_BOLT_ID, terminalbolt).globalGrouping(COUNT_BOLT_ID);
 
         Config config = new Config();
@@ -91,7 +93,7 @@ public class App
             cluster.submitTopology("count_topology", config, builder.createTopology());
 
             try {
-                Thread.sleep(10000);
+                Thread.sleep(20000);
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

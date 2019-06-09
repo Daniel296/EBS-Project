@@ -40,9 +40,10 @@ public class ContentFilterBolt extends BaseRichBolt {
 	public void execute(Tuple input) {
 
 		/**
-		 * [{"birthdate":"1981-02-18","eyeColor":"Blue","heartRate":"60","name":"Allan", "height":"1.66"}]
+		 * [{"birthdate":"1981-02-18","eyeColor":"Blue","heartRate":"60","name":"Allan",
+		 * "height":"1.66"}]
 		 */
-		Map entry = (Map) input.getValueByField("words");
+		Map entry = (Map) input.getValueByField("subscriptions");
 		Publication publication = null;
 		try {
 			publication = convertMapToPublication(entry);
@@ -50,11 +51,21 @@ public class ContentFilterBolt extends BaseRichBolt {
 			e.printStackTrace();
 		}
 
-		if (publication != null && checkPublicationWithSubscription(publication, subscription)) {
-			Map<Class, Object> filteredEntry = new HashMap<>();
-			filteredEntry.put(Publication.class, publication);
-			filteredEntry.put(Subscription.class, subscription);
-			this.collector.emit(new Values(entry));
+		//System.out.println("Before check");
+		try {
+			if (publication != null && checkPublicationWithSubscription(publication, subscription)) {
+				Map<Class, Object> filteredEntry = new HashMap<>();
+				filteredEntry.put(Publication.class, publication);
+				filteredEntry.put(Subscription.class, subscription);
+
+				System.out.println("Content filtering: " + filteredEntry);
+
+				this.collector.emit(new Values(filteredEntry));
+
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
@@ -65,18 +76,18 @@ public class ContentFilterBolt extends BaseRichBolt {
 	}
 
 	private Publication convertMapToPublication(Map entry) throws NumberFormatException, ParseException {
-		String patientName = (String) entry.get("patientName");
-		String dateOfBirth = (String) entry.get("dateOfBirth");
-		String height = (String) entry.get("height");
+		String patientName = (String) entry.get("name");
+		String dateOfBirth = (String) entry.get("birthdate");
+		Double height = (Double) entry.get("height");
 		String eyeColor = (String) entry.get("eyeColor");
-		String heartRate = (String) entry.get("heartRate");
+		Long heartRate = (Long) entry.get("heartRate");
 
-		return new Publication(patientName, new SimpleDateFormat("dd-MM-yyyy").parse(dateOfBirth),
-				Double.parseDouble(height), eyeColor, Integer.parseInt(heartRate));
+		return new Publication(patientName, new SimpleDateFormat("dd/MM/yyyy").parse(dateOfBirth),
+				height, eyeColor, heartRate.intValue());
 
 	}
 
-	private boolean checkPublicationWithSubscription(Publication publication, Subscription subscription) {
+	private boolean checkPublicationWithSubscription(Publication publication, Subscription subscription) throws ParseException {
 		boolean patientName = false;
 		switch (subscription.getPatientNameOperator()) {
 		case 0: // operator is 0 for '='
@@ -94,32 +105,37 @@ public class ContentFilterBolt extends BaseRichBolt {
 		boolean dateOfBirth = false;
 		switch (subscription.getDateOfBirdOperator()) {
 		case 0: // operator is 0 for '='
-			if (publication.getDateOfBirth().compareTo(subscription.getDateOfBirth()) == 0) {
+			if (publication.getDateOfBirth()
+					.compareTo(new SimpleDateFormat("dd/MM/yyyy").parse(subscription.getDateOfBirth())) == 0) {
 				dateOfBirth = true;
 			}
 			break;
 		case 1: // operator is 1 for '!='
-			if (publication.getDateOfBirth().compareTo(subscription.getDateOfBirth()) != 0) {
+			if (publication.getDateOfBirth()
+					.compareTo(new SimpleDateFormat("dd/MM/yyyy").parse(subscription.getDateOfBirth())) != 0) {
 				dateOfBirth = true;
 			}
 			break;
 		case 2: // operator is 2 for '>'
-			if (publication.getDateOfBirth().compareTo(subscription.getDateOfBirth()) > 0) {
+			if (publication.getDateOfBirth()
+					.compareTo(new SimpleDateFormat("dd/MM/yyyy").parse(subscription.getDateOfBirth())) > 0) {
 				dateOfBirth = true;
 			}
 			break;
 		case 3: // operator is 3 for '<'
-			if (publication.getDateOfBirth().compareTo(subscription.getDateOfBirth()) < 0) {
+			if (publication.getDateOfBirth()
+					.compareTo(new SimpleDateFormat("dd/MM/yyyy").parse(subscription.getDateOfBirth())) < 0) {
 				dateOfBirth = true;
 			}
 			break;
 		case 4: // operator is 4 for '>='
-			if (publication.getDateOfBirth().compareTo(subscription.getDateOfBirth()) >= 0) {
+			if (publication.getDateOfBirth()
+					.compareTo(new SimpleDateFormat("dd/MM/yyyy").parse(subscription.getDateOfBirth())) >= 0) {
 				dateOfBirth = true;
 			}
 			break;
 		case 5: // operator is 5 for '<='
-			if (publication.getDateOfBirth().compareTo(subscription.getDateOfBirth()) <= 0) {
+			if (publication.getDateOfBirth().compareTo(new SimpleDateFormat("dd/MM/yyyy").parse(subscription.getDateOfBirth())) <= 0) {
 				dateOfBirth = true;
 			}
 			break;

@@ -2,6 +2,7 @@ package pubsub;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.sql.Date;
 import java.util.List;
 import java.util.Random;
@@ -192,13 +193,13 @@ public class Generator
         return names.get(getRandomNumber(0, names.size()));
     }
 
-    public static java.util.Date getRandomDate()
+    public static String getRandomDate()
     {
         int day = getRandomNumber(1, 28);
         int month = getRandomNumber(1, 12);
         int year = getRandomNumber(1930, 2000);
-
-        return Date.valueOf(LocalDate.of(year, month, day));
+        
+        return day + "/" + month + "/" + year;
     }
 
     public static Double getRandomHeight()

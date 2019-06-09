@@ -19,18 +19,18 @@ public class Subscription implements Serializable
 
     private int heartRateOperator;
 
-    private Date dateOfBirth;
+    private String dateOfBirth;
 
     private int dateOfBirdOperator;
 
     public Subscription(String patientName, int patientNameOperator, int heartRate, int heartRateOperator,
-        Date dateOfBirth, int dateOfBirdOperator)
+        String string, int dateOfBirdOperator)
     {
         this.patientName = patientName;
         this.patientNameOperator = patientNameOperator;
         this.heartRate = heartRate;
         this.heartRateOperator = heartRateOperator;
-        this.dateOfBirth = dateOfBirth;
+        this.dateOfBirth = string;
         this.dateOfBirdOperator = dateOfBirdOperator;
     }
 
@@ -54,17 +54,15 @@ public class Subscription implements Serializable
         this.heartRate = heartRate;
     }
 
-    public Date getDateOfBirth()
-    {
-        return dateOfBirth;
-    }
+    public String getDateOfBirth() {
+		return dateOfBirth;
+	}
 
-    public void setDateOfBirth(Date dateOfBirth)
-    {
-        this.dateOfBirth = dateOfBirth;
-    }
+	public void setDateOfBirth(String dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
 
-    public int getPatientNameOperator()
+	public int getPatientNameOperator()
     {
         return patientNameOperator;
     }
@@ -99,13 +97,13 @@ public class Subscription implements Serializable
     {
         if (patientName == null) {
             return "{" + "(heartRate," + getOperatorString(heartRateOperator) + ",'" + heartRate + ");(dateOfBirth,"
-                + getOperatorString(dateOfBirdOperator) + "," + new SimpleDateFormat("dd.MM.yyyy").format(dateOfBirth)
+                + getOperatorString(dateOfBirdOperator) + "," + dateOfBirth
                 + ")}";
         }
 
         return "{" + "(patientName," + getOperatorString(patientNameOperator) + ",'" + patientName + '\''
             + ");(heartRate," + getOperatorString(heartRateOperator) + ",'" + heartRate + ");(dateOfBirth,"
-            + getOperatorString(dateOfBirdOperator) + "," + new SimpleDateFormat("dd.MM.yyyy").format(dateOfBirth)
+            + getOperatorString(dateOfBirdOperator) + "," + dateOfBirth
             + ")}";
     }
 
