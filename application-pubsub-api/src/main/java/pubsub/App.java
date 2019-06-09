@@ -16,11 +16,21 @@ import org.apache.storm.tuple.Fields;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import pubsub.bolt.ContentFilterBolt;
+import pubsub.bolt.TerminalBolt;
+import pubsub.bolt.PublicationsCountBolt;
+import pubsub.model.Subscription;
+import pubsub.spout.SourceTextSpout;
+
 public class App
 {
     private static final String SPOUT_ID = "source_text_spout";
 
-    private static final String SPLIT_BOLT_ID = "split_bolt";
+    private static final String FILTER_BOLT_1 = "filter_bolt1";
+    
+    private static final String FILTER_BOLT_2 = "filter_bolt2";
+    
+    private static final String FILTER_BOLT_3 = "filter_bolt3";
 
     private static final String COUNT_BOLT_ID = "count_bolt";
 
@@ -37,16 +47,26 @@ public class App
         if (GENERATE_PUBLICATIONS) {
             generatePublications();
         }
+        
+        Subscription firstSubscription = new Subscription(Generator.getRandomName(), Generator.getRandomNameOperator(), Generator.getRandomHeartRate(), Generator.getRandomOperator(), Generator.getRandomDate(), Generator.getRandomOperator());
+        Subscription secondSubscription = new Subscription(Generator.getRandomName(), Generator.getRandomNameOperator(), Generator.getRandomHeartRate(), Generator.getRandomOperator(), Generator.getRandomDate(), Generator.getRandomOperator());
+        Subscription thirdSubscription = new Subscription(Generator.getRandomName(), Generator.getRandomNameOperator(), Generator.getRandomHeartRate(), Generator.getRandomOperator(), Generator.getRandomDate(), Generator.getRandomOperator());
+    
 
         TopologyBuilder builder = new TopologyBuilder();
         SourceTextSpout spout = new SourceTextSpout();
-        SplitTextBolt splitbolt = new SplitTextBolt();
-        WordCountBolt countbolt = new WordCountBolt();
+        ContentFilterBolt firstContentFilter = new ContentFilterBolt(firstSubscription);
+        ContentFilterBolt secondContentFilter = new ContentFilterBolt(secondSubscription);
+        ContentFilterBolt thirdContentFilter = new ContentFilterBolt(thirdSubscription);
+        
+        PublicationsCountBolt countbolt = new PublicationsCountBolt();
         TerminalBolt terminalbolt = new TerminalBolt();
 
         builder.setSpout(SPOUT_ID, spout);
-        builder.setBolt(SPLIT_BOLT_ID, splitbolt).shuffleGrouping(SPOUT_ID);
-        builder.setBolt(COUNT_BOLT_ID, countbolt).fieldsGrouping(SPLIT_BOLT_ID, new Fields("word"));
+        builder.setBolt(FILTER_BOLT_1, firstContentFilter).shuffleGrouping(SPOUT_ID);
+        builder.setBolt(FILTER_BOLT_2, secondContentFilter).shuffleGrouping(SPOUT_ID);
+        builder.setBolt(FILTER_BOLT_3, thirdContentFilter).shuffleGrouping(SPOUT_ID);
+        builder.setBolt(COUNT_BOLT_ID, countbolt).fieldsGrouping(FILTER_BOLT_3, new Fields("subscription"));
         builder.setBolt(TERMINAL_BOLT_ID, terminalbolt).globalGrouping(COUNT_BOLT_ID);
 
         Config config = new Config();

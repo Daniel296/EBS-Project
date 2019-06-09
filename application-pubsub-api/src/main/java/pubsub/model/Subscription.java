@@ -1,11 +1,17 @@
-package pubsub;
+package pubsub.model;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Subscription
+public class Subscription implements Serializable
 {
-    private String patientName;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String patientName;
 
     private int patientNameOperator;
 

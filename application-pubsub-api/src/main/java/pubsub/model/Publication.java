@@ -1,10 +1,16 @@
-package pubsub;
+package pubsub.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Publication
+public class Publication implements Serializable
 {
-    private String patientName;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String patientName;
 
     private Date dateOfBirth;
 

@@ -1,7 +1,8 @@
-package pubsub;
+package pubsub.bolt;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
@@ -9,21 +10,26 @@ import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Tuple;
 
+import pubsub.model.Subscription;
+
 public class TerminalBolt extends BaseRichBolt {
     
-    private HashMap<String, Integer> count;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private HashMap<Subscription, Integer> count;
 
     public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
-        // TODO Auto-generated method stub
-        this.count = new HashMap<String, Integer>();
+        this.count = new HashMap<Subscription, Integer>();
 
     }
 
     public void execute(Tuple input) {
-        // TODO Auto-generated method stub
-        String word = input.getStringByField("word");
+    	Map<Class,Object> entry = (Map<Class,Object>) input.getValueByField("subscription");
+    	Subscription sub = (Subscription) entry.get(Subscription.class);
         Integer count = input.getIntegerByField("count");
-        this.count.put(word, count);
+        this.count.put(sub, count);
         
     }
 
@@ -34,7 +40,7 @@ public class TerminalBolt extends BaseRichBolt {
     
     public void cleanup() {
         System.out.println("Topology Result:");
-        for (Map.Entry<String, Integer> entry : this.count.entrySet()) {
+        for (Entry<Subscription, Integer> entry : this.count.entrySet()) {
             System.out.println(entry.getKey()+" - "+entry.getValue());
         }
     }
