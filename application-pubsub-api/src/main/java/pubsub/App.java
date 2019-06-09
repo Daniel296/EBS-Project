@@ -36,7 +36,7 @@ public class App
 
     private static final String TERMINAL_BOLT_ID = "terminal_bolt";
 
-    private static final boolean GENERATE_PUBLICATIONS = true;
+    private static final boolean GENERATE_PUBLICATIONS = false;
 
     public static final String FEED_NAME = "publications.json";
 
