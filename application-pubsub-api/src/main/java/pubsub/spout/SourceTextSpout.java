@@ -1,4 +1,4 @@
-package pubsub;
+package pubsub.spout;
 
 import java.io.FileReader;
 import java.util.Map;
@@ -12,6 +12,8 @@ import org.apache.storm.tuple.Values;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 
+import pubsub.App;
+
 @SuppressWarnings("serial")
 public class SourceTextSpout extends BaseRichSpout
 {
@@ -20,22 +22,16 @@ public class SourceTextSpout extends BaseRichSpout
 
     private JSONArray sourceFeed;
 
-    // private String[] sourcetext = {"text one", "text two", "text three", "text four", "too much text after one"};
-//    [{"birthdate":"1981-02-18","eyeColor":"Blue","heartRate":"60","name":"Allan","height":"1.66"}]
-
     private int i = 0;
 
     public void open(Map conf, TopologyContext context, SpoutOutputCollector collector)
     {
-        // TODO Auto-generated method stub
         this.collector = collector;
         this.sourceFeed = readSourceFile();
     }
 
     public void nextTuple()
     {
-        // TODO Auto-generated method stub
-
         this.collector.emit(new Values(sourceFeed.toArray()[i]));
         i++;
         if (i >= sourceFeed.toArray().length) {
@@ -52,10 +48,13 @@ public class SourceTextSpout extends BaseRichSpout
 
     public void declareOutputFields(OutputFieldsDeclarer declarer)
     {
-        // TODO Auto-generated method stub
-        declarer.declare(new Fields("words"));
+        declarer.declare(new Fields("subscriptions"));
     }
 
+    /**
+	 * Sample of generated feed.
+	 * [{"birthdate":"1981-02-18","eyeColor":"Blue","heartRate":"60","name":"Allan", "height":"1.66"}]
+	 */
     private JSONArray readSourceFile()
     {
         // JSON parser object to parse read file
@@ -66,16 +65,6 @@ public class SourceTextSpout extends BaseRichSpout
             Object obj = jsonParser.parse(reader);
 
             return (JSONArray) obj;
-
-            // for (int i = 0; i < App.MAX_MESSAGES; i++) {
-            // JSONObject publicationJSON = (JSONObject) publications.get(i);
-            // Publication publication = new Publication(publicationJSON.get("name").toString(),
-            // Date.valueOf(publicationJSON.get("birthdate").toString()),
-            // Double.parseDouble(publicationJSON.get("height").toString()),
-            // publicationJSON.get("eyeColor").toString(),
-            // Integer.parseInt(publicationJSON.get("heartRate").toString()));
-            // publisher.publish(publication, pubSubService);
-            // }
 
         } catch (Exception e) {
             e.printStackTrace();

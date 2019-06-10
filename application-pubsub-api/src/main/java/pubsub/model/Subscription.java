@@ -1,11 +1,17 @@
-package pubsub;
+package pubsub.model;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Subscription
+public class Subscription implements Serializable
 {
-    private String patientName;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String patientName;
 
     private int patientNameOperator;
 
@@ -13,18 +19,18 @@ public class Subscription
 
     private int heartRateOperator;
 
-    private Date dateOfBirth;
+    private String dateOfBirth;
 
     private int dateOfBirdOperator;
 
     public Subscription(String patientName, int patientNameOperator, int heartRate, int heartRateOperator,
-        Date dateOfBirth, int dateOfBirdOperator)
+        String string, int dateOfBirdOperator)
     {
         this.patientName = patientName;
         this.patientNameOperator = patientNameOperator;
         this.heartRate = heartRate;
         this.heartRateOperator = heartRateOperator;
-        this.dateOfBirth = dateOfBirth;
+        this.dateOfBirth = string;
         this.dateOfBirdOperator = dateOfBirdOperator;
     }
 
@@ -48,17 +54,15 @@ public class Subscription
         this.heartRate = heartRate;
     }
 
-    public Date getDateOfBirth()
-    {
-        return dateOfBirth;
-    }
+    public String getDateOfBirth() {
+		return dateOfBirth;
+	}
 
-    public void setDateOfBirth(Date dateOfBirth)
-    {
-        this.dateOfBirth = dateOfBirth;
-    }
+	public void setDateOfBirth(String dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
 
-    public int getPatientNameOperator()
+	public int getPatientNameOperator()
     {
         return patientNameOperator;
     }
@@ -93,13 +97,13 @@ public class Subscription
     {
         if (patientName == null) {
             return "{" + "(heartRate," + getOperatorString(heartRateOperator) + ",'" + heartRate + ");(dateOfBirth,"
-                + getOperatorString(dateOfBirdOperator) + "," + new SimpleDateFormat("dd.MM.yyyy").format(dateOfBirth)
+                + getOperatorString(dateOfBirdOperator) + "," + dateOfBirth
                 + ")}";
         }
 
         return "{" + "(patientName," + getOperatorString(patientNameOperator) + ",'" + patientName + '\''
             + ");(heartRate," + getOperatorString(heartRateOperator) + ",'" + heartRate + ");(dateOfBirth,"
-            + getOperatorString(dateOfBirdOperator) + "," + new SimpleDateFormat("dd.MM.yyyy").format(dateOfBirth)
+            + getOperatorString(dateOfBirdOperator) + "," + dateOfBirth
             + ")}";
     }
 
