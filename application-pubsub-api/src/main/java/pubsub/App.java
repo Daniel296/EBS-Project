@@ -4,6 +4,9 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
@@ -36,7 +39,7 @@ public class App
 
     private static final String TERMINAL_BOLT_ID = "terminal_bolt";
 
-    private static final boolean GENERATE_PUBLICATIONS = false;
+    private static final boolean GENERATE_PUBLICATIONS = true;
 
     public static final String FEED_NAME = "publications.json";
 
@@ -131,15 +134,17 @@ public class App
 
     private static void writeToFile(JSONArray publications, String fileName)
     {
-        File file = new File(fileName);
+        FileOutputStream fout = null;
+
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+            fout = new FileOutputStream("src/main/resources/" + fileName);
+            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fout);
 
             bufferedOutputStream.write((publications.toString()).getBytes());
 
             bufferedOutputStream.close();
-            fileOutputStream.close();
+            fout.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

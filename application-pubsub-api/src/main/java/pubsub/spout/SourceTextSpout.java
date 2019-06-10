@@ -1,5 +1,6 @@
 package pubsub.spout;
 
+import java.io.File;
 import java.io.FileReader;
 import java.util.Map;
 
@@ -60,7 +61,11 @@ public class SourceTextSpout extends BaseRichSpout
         // JSON parser object to parse read file
         JSONParser jsonParser = new JSONParser();
 
-        try (FileReader reader = new FileReader(App.FEED_NAME)) {
+        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+        
+        File file = new File(classLoader.getResource(App.FEED_NAME).getFile());
+        
+        try (FileReader reader = new FileReader(file)) {
             // Read JSON file
             Object obj = jsonParser.parse(reader);
 
