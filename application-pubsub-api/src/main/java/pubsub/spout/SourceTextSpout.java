@@ -14,9 +14,9 @@ import org.json.simple.parser.JSONParser;
 
 import pubsub.App;
 
-@SuppressWarnings("serial")
 public class SourceTextSpout extends BaseRichSpout
 {
+    private static final long serialVersionUID = 1L;
 
     private SpoutOutputCollector collector;
 
@@ -52,9 +52,9 @@ public class SourceTextSpout extends BaseRichSpout
     }
 
     /**
-	 * Sample of generated feed.
-	 * [{"birthdate":"1981-02-18","eyeColor":"Blue","heartRate":"60","name":"Allan", "height":"1.66"}]
-	 */
+     * Sample of generated feed. [{"birthdate":"1981-02-18","eyeColor":"Blue","heartRate":"60","name":"Allan",
+     * "height":"1.66"}]
+     */
     private JSONArray readSourceFile()
     {
         // JSON parser object to parse read file

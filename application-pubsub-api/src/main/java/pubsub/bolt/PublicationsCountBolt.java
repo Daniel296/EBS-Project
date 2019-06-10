@@ -20,11 +20,11 @@ public class PublicationsCountBolt extends BaseRichBolt
 {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	private OutputCollector collector;
+    private OutputCollector collector;
 
     private HashMap<Subscription, Integer> count;
 
@@ -37,19 +37,19 @@ public class PublicationsCountBolt extends BaseRichBolt
 
     public void execute(Tuple input)
     {
-		Map<Class,Object> entry = (Map<Class,Object>) input.getValueByField("subscription"); 
-		Subscription sub = (Subscription) entry.get(Subscription.class);
-		
-		System.out.println("Counter: " + sub);
-		
-		Integer subCount = this.count.get(sub);
-		
-		if (subCount == null) {
-			subCount = 0;
-		}
-		subCount++;
-		this.count.put(sub, subCount);
-		this.collector.emit(new Values(entry,subCount));
+        Map<Class, Object> entry = (Map<Class, Object>) input.getValueByField("subscription");
+        Subscription sub = (Subscription) entry.get(Subscription.class);
+
+        System.out.println("Counter: " + sub);
+
+        Integer subCount = this.count.get(sub);
+
+        if (subCount == null) {
+            subCount = 0;
+        }
+        subCount++;
+        this.count.put(sub, subCount);
+        this.collector.emit(new Values(entry, subCount));
 
     }
 

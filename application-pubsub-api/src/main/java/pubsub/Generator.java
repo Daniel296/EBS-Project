@@ -1,9 +1,6 @@
 package pubsub;
 
-import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.sql.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -198,7 +195,7 @@ public class Generator
         int day = getRandomNumber(1, 28);
         int month = getRandomNumber(1, 12);
         int year = getRandomNumber(1930, 2000);
-        
+
         return day + "/" + month + "/" + year;
     }
 

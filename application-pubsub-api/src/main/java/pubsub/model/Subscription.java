@@ -1,17 +1,12 @@
 package pubsub.model;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Subscription implements Serializable
 {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String patientName;
+    private String patientName;
 
     private int patientNameOperator;
 
@@ -54,15 +49,17 @@ public class Subscription implements Serializable
         this.heartRate = heartRate;
     }
 
-    public String getDateOfBirth() {
-		return dateOfBirth;
-	}
+    public String getDateOfBirth()
+    {
+        return dateOfBirth;
+    }
 
-	public void setDateOfBirth(String dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
-	}
+    public void setDateOfBirth(String dateOfBirth)
+    {
+        this.dateOfBirth = dateOfBirth;
+    }
 
-	public int getPatientNameOperator()
+    public int getPatientNameOperator()
     {
         return patientNameOperator;
     }
@@ -97,14 +94,12 @@ public class Subscription implements Serializable
     {
         if (patientName == null) {
             return "{" + "(heartRate," + getOperatorString(heartRateOperator) + ",'" + heartRate + ");(dateOfBirth,"
-                + getOperatorString(dateOfBirdOperator) + "," + dateOfBirth
-                + ")}";
+                + getOperatorString(dateOfBirdOperator) + "," + dateOfBirth + ")}";
         }
 
         return "{" + "(patientName," + getOperatorString(patientNameOperator) + ",'" + patientName + '\''
             + ");(heartRate," + getOperatorString(heartRateOperator) + ",'" + heartRate + ");(dateOfBirth,"
-            + getOperatorString(dateOfBirdOperator) + "," + dateOfBirth
-            + ")}";
+            + getOperatorString(dateOfBirdOperator) + "," + dateOfBirth + ")}";
     }
 
     private String getOperatorString(int operator)
