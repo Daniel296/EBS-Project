@@ -2,6 +2,7 @@ package pubsub.spout;
 
 import java.io.File;
 import java.io.FileReader;
+import java.util.Date;
 import java.util.Map;
 
 import org.apache.storm.spout.SpoutOutputCollector;
@@ -11,6 +12,7 @@ import org.apache.storm.topology.base.BaseRichSpout;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Values;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import pubsub.App;
@@ -31,12 +33,17 @@ public class SourceTextSpout extends BaseRichSpout
         this.sourceFeed = readSourceFile();
     }
 
+    @SuppressWarnings("unchecked")
     public void nextTuple()
     {
-        this.collector.emit(new Values(sourceFeed.toArray()[i]));
+        JSONObject entry = (JSONObject) sourceFeed.toArray()[i];
+        entry.put("date", new Date());
+
+        this.collector.emit(new Values(entry));
         i++;
         if (i >= sourceFeed.toArray().length) {
             i = 0;
+            
         }
 
         try {
@@ -62,12 +69,12 @@ public class SourceTextSpout extends BaseRichSpout
         JSONParser jsonParser = new JSONParser();
 
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-        
+
         File file = new File(classLoader.getResource(App.FEED_NAME).getFile());
-        
+
         try (FileReader reader = new FileReader(file)) {
             // Read JSON file
-            Object obj = jsonParser.parse(reader);
+            Object obj = (JSONArray) jsonParser.parse(reader);
 
             return (JSONArray) obj;
 

@@ -1,9 +1,8 @@
 package pubsub.bolt;
 
+import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
@@ -13,7 +12,7 @@ import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 
-import pubsub.model.Publication;
+import pubsub.AverageCalculator;
 import pubsub.model.Subscription;
 
 public class PublicationsCountBolt extends BaseRichBolt
@@ -27,6 +26,8 @@ public class PublicationsCountBolt extends BaseRichBolt
     private OutputCollector collector;
 
     private HashMap<Subscription, Integer> count;
+    
+    private double averageDelay;
 
     public void prepare(Map stormConf, TopologyContext context, OutputCollector collector)
     {
@@ -37,11 +38,20 @@ public class PublicationsCountBolt extends BaseRichBolt
 
     public void execute(Tuple input)
     {
+        Date receivedTime = new Date();
         Map<Class, Object> entry = (Map<Class, Object>) input.getValueByField("subscription");
         Subscription sub = (Subscription) entry.get(Subscription.class);
 
-        System.out.println("Counter: " + sub);
-
+        Date sentTime = (Date) entry.get(Date.class);
+        
+        
+        long diff = receivedTime.getTime() - sentTime.getTime();
+        System.out.println("Delay for publication " + entry + " is " + diff + " milliseconds");
+        
+        AverageCalculator instance = AverageCalculator.getInstance();
+        instance.pushDelay(diff);
+        
+        
         Integer subCount = this.count.get(sub);
 
         if (subCount == null) {

@@ -103,6 +103,7 @@ public class App
                 e.printStackTrace();
             }
 
+            System.out.println("Average delay: " + AverageCalculator.getInstance().computeAverage());
             cluster.killTopology("count_topology");
             cluster.shutdown();
 
