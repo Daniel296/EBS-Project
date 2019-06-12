@@ -12,8 +12,9 @@ import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 
-import pubsub.AverageCalculator;
+import pubsub.model.Publication;
 import pubsub.model.Subscription;
+import pubsub.utils.AverageCalculator;
 
 public class PublicationsCountBolt extends BaseRichBolt
 {
@@ -40,13 +41,18 @@ public class PublicationsCountBolt extends BaseRichBolt
     {
         Date receivedTime = new Date();
         Map<Class, Object> entry = (Map<Class, Object>) input.getValueByField("subscription");
+        
+        if (entry == null) {
+        	return;
+        }
+        
         Subscription sub = (Subscription) entry.get(Subscription.class);
-
+        
         Date sentTime = (Date) entry.get(Date.class);
         
-        
         long diff = receivedTime.getTime() - sentTime.getTime();
-        System.out.println("Delay for publication " + entry + " is " + diff + " milliseconds");
+        Publication pub = (Publication) entry.get(Publication.class);
+        System.out.println("Delay for publication " + pub + " is " + diff + " milliseconds");
         
         AverageCalculator instance = AverageCalculator.getInstance();
         instance.pushDelay(diff);

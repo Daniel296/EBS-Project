@@ -1,4 +1,4 @@
-package pubsub;
+package pubsub.utils;
 
 import java.util.Arrays;
 import java.util.List;

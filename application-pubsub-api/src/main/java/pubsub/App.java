@@ -14,15 +14,18 @@ import org.apache.storm.tuple.Fields;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import pubsub.bolt.BackupBolt;
 import pubsub.bolt.ContentFilterBolt;
 import pubsub.bolt.TerminalBolt;
 import pubsub.bolt.PublicationsCountBolt;
 import pubsub.model.Subscription;
 import pubsub.spout.SourceTextSpout;
+import pubsub.utils.AverageCalculator;
+import pubsub.utils.Generator;
 
 public class App
 {
-    private static final String SPOUT_ID = "source_text_spout";
+	private static final String SPOUT_ID = "source_text_spout";
 
     private static final String FILTER_BOLT_1 = "filter_bolt1";
 
@@ -34,7 +37,7 @@ public class App
 
     private static final String TERMINAL_BOLT_ID = "terminal_bolt";
 
-    private static final boolean GENERATE_PUBLICATIONS = true;
+    private static final boolean GENERATE_PUBLICATIONS = false;
 
     public static final String FEED_NAME = "publications.json";
 
@@ -58,9 +61,9 @@ public class App
 
         TopologyBuilder builder = new TopologyBuilder();
         SourceTextSpout spout = new SourceTextSpout();
-        ContentFilterBolt firstContentFilter = new ContentFilterBolt(firstSubscription);
-        ContentFilterBolt secondContentFilter = new ContentFilterBolt(secondSubscription);
-        ContentFilterBolt thirdContentFilter = new ContentFilterBolt(thirdSubscription);
+        ContentFilterBolt firstContentFilter = new ContentFilterBolt(firstSubscription, false);
+        ContentFilterBolt secondContentFilter = new ContentFilterBolt(secondSubscription, false);
+        ContentFilterBolt thirdContentFilter = new ContentFilterBolt(thirdSubscription, true);
 
         PublicationsCountBolt countbolt = new PublicationsCountBolt();
         TerminalBolt terminalbolt = new TerminalBolt();
@@ -71,7 +74,7 @@ public class App
         builder.setBolt(FILTER_BOLT_3, thirdContentFilter).shuffleGrouping(SPOUT_ID);
         builder.setBolt(COUNT_BOLT_ID, countbolt).fieldsGrouping(FILTER_BOLT_3, new Fields("subscription"))
             .fieldsGrouping(FILTER_BOLT_2, new Fields("subscription"))
-            .fieldsGrouping(FILTER_BOLT_3, new Fields("subscription"));
+            .fieldsGrouping(FILTER_BOLT_1, new Fields("subscription"));
 
         builder.setBolt(TERMINAL_BOLT_ID, terminalbolt).globalGrouping(COUNT_BOLT_ID);
 
@@ -144,5 +147,5 @@ public class App
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+}
 }

@@ -81,4 +81,11 @@ public class Publication implements Serializable
         // TODO Auto-generated method stub
         return null;
     }
+
+	@Override
+	public String toString() 
+	{
+		return "Publication [patientName=" + patientName + ", dateOfBirth=" + dateOfBirth + ", height=" + height
+				+ ", eyeColor=" + eyeColor + ", heartRate=" + heartRate + "]";
+	}
 }
